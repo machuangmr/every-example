@@ -73,5 +73,17 @@ public class RabbitmqConfig {
         return containerFactory;
     }
 
+    /**
+     * 增加dev 环境ContainerFactory
+     */
+    @Bean(name = "devContainerFactory")
+    public SimpleRabbitListenerContainerFactory devSimpleRabbitListenerContainerFactory(
+            SimpleRabbitListenerContainerFactoryConfigurer rabbitListenerContainerFactoryConfigurer,
+            @Qualifier("myConnection") ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory containerFactory = new SimpleRabbitListenerContainerFactory();
+        rabbitListenerContainerFactoryConfigurer.configure(containerFactory, connectionFactory);
+        return containerFactory;
+    }
+
 
 }

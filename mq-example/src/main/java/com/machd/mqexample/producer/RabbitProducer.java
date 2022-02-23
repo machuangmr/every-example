@@ -1,5 +1,7 @@
 package com.machd.mqexample.producer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import javax.annotation.Resource;
 @RestController
 public class RabbitProducer {
 
+    private static final Logger logger = LoggerFactory.getLogger(RabbitProducer.class);
     @Resource(name="myRabbitTemplate")
     private RabbitTemplate rabbitTemplate;
 
@@ -26,6 +29,7 @@ public class RabbitProducer {
 
     @GetMapping("send/mymq")
     public String sendMsg(){
+        logger.info("生产者发送了一条消息=====");
         rabbitTemplate.convertAndSend("myDirectExchange", "myDirect", "mymq");
         return "发送 mymq";
     }
