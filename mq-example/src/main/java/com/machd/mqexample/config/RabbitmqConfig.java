@@ -1,10 +1,12 @@
 package com.machd.mqexample.config;
 
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -61,5 +63,15 @@ public class RabbitmqConfig {
     public RabbitTemplate testRabbitTemplate(@Qualifier("testConnection") ConnectionFactory connectionFactory) {
         return new RabbitTemplate(connectionFactory);
     }
+
+    @Bean(name = "testContainerFactory")
+    public SimpleRabbitListenerContainerFactory testSimpleRabbitListenerContainerFactory(
+            SimpleRabbitListenerContainerFactoryConfigurer rabbitListenerContainerFactoryConfigurer,
+            @Qualifier("testConnection") ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory containerFactory=new SimpleRabbitListenerContainerFactory();
+        rabbitListenerContainerFactoryConfigurer.configure(containerFactory,connectionFactory);
+        return containerFactory;
+    }
+
 
 }
