@@ -22,14 +22,11 @@ import java.io.IOException;
 @RabbitListener(queues = "test", containerFactory = "testContainerFactory")
 public class RabbitConsumer {
     @RabbitHandler
-    public void process(Channel channel, Message message) {
-
+    public void process(Channel channel, Message message, String msg) {
 
         try {
-            Jackson2JsonMessageConverter messageConverter = new Jackson2JsonMessageConverter();
-            System.out.println("message==" + message);
-            Object o = messageConverter.fromMessage(message);
-            System.out.println("Second Queue received msg : " + o );
+            System.out.println("test Queue received msg : " + msg );
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
         } catch (Exception e) {
            e.printStackTrace();
         }

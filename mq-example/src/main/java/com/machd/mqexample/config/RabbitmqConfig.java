@@ -1,9 +1,11 @@
 package com.machd.mqexample.config;
 
+import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
@@ -56,7 +58,9 @@ public class RabbitmqConfig {
 
     @Bean("myRabbitTemplate")
     public RabbitTemplate myRabbitTemplate(@Qualifier("myConnection") ConnectionFactory connectionFactory) {
-        return new RabbitTemplate(connectionFactory);
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        return rabbitTemplate;
     }
 
     @Bean("testRabbitTemplate")
@@ -69,6 +73,7 @@ public class RabbitmqConfig {
             SimpleRabbitListenerContainerFactoryConfigurer rabbitListenerContainerFactoryConfigurer,
             @Qualifier("testConnection") ConnectionFactory connectionFactory) {
         SimpleRabbitListenerContainerFactory containerFactory=new SimpleRabbitListenerContainerFactory();
+        containerFactory.setMessageConverter(new Jackson2JsonMessageConverter());
         rabbitListenerContainerFactoryConfigurer.configure(containerFactory,connectionFactory);
         return containerFactory;
     }
@@ -78,11 +83,13 @@ public class RabbitmqConfig {
      */
     @Bean(name = "devContainerFactory")
     public SimpleRabbitListenerContainerFactory devSimpleRabbitListenerContainerFactory(
-            SimpleRabbitListenerContainerFactoryConfigurer rabbitListenerContainerFactoryConfigurer,
             @Qualifier("myConnection") ConnectionFactory connectionFactory) {
-        SimpleRabbitListenerContainerFactory containerFactory = new SimpleRabbitListenerContainerFactory();
-        rabbitListenerContainerFactoryConfigurer.configure(containerFactory, connectionFactory);
-        return containerFactory;
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(new Jackson2JsonMessageConverter());
+        factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+        factory.setAutoStartup(true);
+        return factory;
     }
 
 
