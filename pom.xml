@@ -23,6 +23,7 @@
         <module>jvm-exmaple</module>
         <module>mq-example</module>
         <module>SpringSecurity-example</module>
+        <module>multi-thread</module>
     </modules>
 
     <properties>
