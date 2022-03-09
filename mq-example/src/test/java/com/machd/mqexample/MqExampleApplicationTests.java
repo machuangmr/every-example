@@ -1,13 +1,13 @@
 package com.machd.mqexample;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
-class MqExampleApplicationTests {
-
-    @Test
-    void contextLoads() {
-    }
-
-}
+//import org.junit.jupiter.api.Test;
+//import org.springframework.boot.test.context.SpringBootTest;
+//
+//@SpringBootTest
+//class MqExampleApplicationTests {
+//
+//    @Test
+//    void contextLoads() {
+//    }
+//
+//}

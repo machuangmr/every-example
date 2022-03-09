@@ -9,6 +9,7 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,11 +36,24 @@ public class RabbitProducer {
 //    @Resource(name="testRabbitTemplate")
 //    private RabbitTemplate testRabbitTemplate;
 
+    @Value("${spring.rabbitmq.exchangename}")
+    private String exchangeName;
+
+    @Value("${spring.rabbitmq.routingkey}")
+    private String routingKey;
+
     @GetMapping("send/mymq")
     public String sendMsg(){
         logger.info("生产者发送了一条消息=====");
         rabbitTemplate.convertAndSend("myDirectExchange", "myDirect", "mymq");
         return "发送 mymq";
+    }
+
+    @GetMapping("sendmsg/byconfig")
+    public String sendMsgByConfig() {
+       logger.info("配置 生产者发送了一条消息");
+       rabbitTemplate.convertAndSend(exchangeName, routingKey, "config msg");
+       return "配置 生产者发送消息完成";
     }
 
     @GetMapping("send/testmq")

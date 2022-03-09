@@ -26,17 +26,22 @@ public class RabbitMyConsumer {
     private static final Logger logger = LoggerFactory.getLogger(RabbitMyConsumer.class);
 
     @RabbitHandler
-    public void handler(String order, Message message, Channel channel) {
+    public void handler(@Payload Order order, Message message, Channel channel) throws IOException {
         // 方法名称无所谓，主要是要是用@RabbitHandler注解
        // System.out.println("dev环境队列收到消息===" + msg);
         try {
             //Order order = (Order)new Jackson2JsonMessageConverter().fromMessage(message);
             //String s = message.toString();
-            ObjectMapper objectMapper = new ObjectMapper();
-            Order order1 = objectMapper.readValue(order, Order.class);
-            logger.info("消费者收到的订单消息={}", order1);
+            //int i = 1 / 0;
+            //ObjectMapper objectMapper = new ObjectMapper();
+           // Order order1 = objectMapper.readValue(order, Order.class);
+            logger.info("消费者收到的订单消息={}", order);
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            logger.info("消费者有报错，消息重新入队列, 消息={}", order);
+            // channel.basickNack和basicReject的区别是，前者可以拒绝多次，后者只能拒绝一次
+            // channel.basicNack();
+            channel.basicReject(message.getMessageProperties().getDeliveryTag(), false);
             e.printStackTrace();
         }
     }
