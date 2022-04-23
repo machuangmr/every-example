@@ -24,6 +24,7 @@
         <module>mq-example</module>
         <module>SpringSecurity-example</module>
         <module>multi-thread</module>
+        <module>design-pattern</module>
     </modules>
 
     <properties>
