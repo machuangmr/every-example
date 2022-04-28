@@ -1,5 +1,6 @@
-package com.machd.responschain;
+package com.machd.responschain.v2;
 
+import com.machd.responschain.Member;
 
 /**
  * 请添加注释
@@ -8,7 +9,7 @@ package com.machd.responschain;
  * @version 3.0
  * @date 2022/4/27
  */
-public class ValidateHandler extends Handler{
+public class ValidateHandler extends Handler {
     @Override
     public void doHandler(Member member) {
         if (member.getPassword() == null
@@ -19,6 +20,9 @@ public class ValidateHandler extends Handler{
         if ("machd".equals(member.getUsername())
                 && "1234".equals(member.getPassword())) {
             System.out.println("账号密码正确");
+        } else {
+            System.out.println("账号密码错误");
+            return;
         }
         next.doHandler(member);
     }
