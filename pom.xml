@@ -22,9 +22,11 @@
     <modules>
         <module>jvm-exmaple</module>
         <module>mq-example</module>
+        <module>project-demo</module>
         <module>SpringSecurity-example</module>
         <module>multi-thread</module>
         <module>design-pattern</module>
+        <module>dubbo-example</module>
     </modules>
 
     <properties>
