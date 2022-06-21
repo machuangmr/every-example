@@ -10,7 +10,7 @@ import org.apache.dubbo.config.annotation.Service;
  * @version 3
  * @since 3.0
  */
-@Service
+@Service// 这里的的注解是dubbo包下的service
 public class HelloServiceImpl implements IHelloService {
     @Override
     public String hello(String username) {
