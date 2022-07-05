@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-    @Reference(generic = true)//表示使用dubbo协议去构建这个代理对象
+    @Reference//表示使用dubbo协议去构建这个代理对象
     private IHelloService helloService;
 
     @GetMapping("/hello")
