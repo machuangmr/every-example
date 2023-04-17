@@ -16,9 +16,6 @@
         <module>dubbo-provider-api</module>
     </modules>
     <name>dubbo-example</name>
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
