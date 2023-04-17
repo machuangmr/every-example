@@ -2,73 +2,70 @@ package com.machd.printdemo;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * 请添加注释
- *
- * @author macd
- * @version 3
- * @since 3.0
- */
 public class TestPrintAB {
-
+    /**
+     * 思路：线程间通信，采用一个共享变量来控制.
+     * wait/notify本质上是互斥方法，实现互斥，那么最简单的就是synchronized
+     * @param args
+     */
+    // 同一把互斥锁
+    private static final Object obj = new Object();
     private static boolean flag = true;
-    private static final Object OBJ = new Object();
-    static class PintAThread implements Runnable{
+    public static void main(String[] args) {
+        Thread t1 = new Thread(new T1());
+        Thread t2 = new Thread(new T2());
+        t1.start();
+        t2.start();
 
-        @Override
-        public void run() {
-            while(true){
-                synchronized (OBJ) {
-                    if (!flag) {
-                        try {
-                            OBJ.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    System.out.println("A--");
-                    try {
-                        TimeUnit.SECONDS.sleep(1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    flag = false;
-                    OBJ.notify();
-                }
-            }
-            }
     }
-
-    static class PrintBThread implements Runnable{
+    static class T1 implements Runnable{
+        /**
+         * 思路：1、先抢占锁，如果抢占到锁后则执行逻辑
+         *      2、判断共享变量的值，如果值为true，则需要将值转换为下一个值，并且唤醒等待当前锁的所有线程，自己释放锁。
+         *      3、由于当前线程释放了锁，其他线程遍可以去竞争锁
+         */
 
         @Override
         public void run() {
             while(true) {
-                synchronized (OBJ) {
+                synchronized (obj) {
                     if (flag) {
+                        System.out.println("A---");
+                        flag = false;
                         try {
-                            OBJ.wait();
+                            obj.notifyAll();
+                            obj.wait();
+                            TimeUnit.SECONDS.sleep(1);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    System.out.println("B--");
-                    try {
-                        TimeUnit.SECONDS.sleep(1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    flag = true;
-                    OBJ.notify();
                 }
             }
         }
     }
 
-    public static void main(String[] args) {
-       Thread t1 = new Thread(new PintAThread());
-       Thread t2 = new Thread(new PrintBThread());
-       t1.start();
-       t2.start();
+    static class T2 implements Runnable{
+
+        @Override
+        public void run() {
+            while(true) {
+                synchronized (obj) {
+                    if (!flag) {
+                        System.out.println("B---");
+                        flag = true;
+                        try {
+                            obj.notifyAll();
+                            obj.wait();
+                            TimeUnit.SECONDS.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
     }
+
+
 }
