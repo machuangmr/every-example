@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:macd@zjport.gov.cn">macd</a>
+ * @author <a href="mailto:macd@163.com">macd</a>
  * @version 2.0
  * @since 2.0
  */
